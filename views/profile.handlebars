@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <title>
+        Test
+        </title>
+        <link rel="stylesheet" type="text/css" href="../css/profileStyl.css"> 
+        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    </head>
+    
+    <body>
+            <div class="cover">
+                <img alt2="pics" src="../images/Zayn-malik%202.jpg">
+            </div>
+
+            <div class="profile" style="background-image: url('{{userdp}}')">
+                <div class="profileOverlay"></div>
+                <div class="img">
+                    <img alt="pic" src="{{userdp}}" > 
+                </div>
+                <div class="profileName">
+                    {{name}}
+                </div>
+                
+                <div>
+                    <p>
+                        Followers : 300k
+                        <br><br>
+                        Views : 1M<br>
+                        {{#if editprofile}}
+                        <a href="#" class=" button editbutton">Edit Profile</a>
+                        {{/if}}
+                        <a href="/signout" class=" button editbutton">Sign Out</a>
+
+                    </p>
+                </div>
+                
+            </div>
+        
+            <div class ="info">
+                    <div class="section">
+                        <a href="#section" class=" button link ">Timeline</a>
+                        <a href="#about" class=" button link">About</a>
+                        <a href="#friends" class=" button link">Friends</a>
+                    </div>
+
+                
+                        <div class="posts">
+                            {{#if err}} {{err}} {{/if}}
+                            {{#each posts}}
+                            <div class="post">
+                                <div class="postimage"><img alt2="pics" src="{{this.postimg}}"></div>
+                                <div class="postinfo">
+                                    <a class=" button curved postedby" href="/profile">{{../name}}</a> <br>
+                                    <p class="caption">{{this.caption}}</p>
+                                    <button class="button curved likebutton">Like</button>
+                                    <button class="button curved commentbutton">Comment</button>
+                                    <div class="likes button curved">1k likes</div> 
+                                    <div class="comments  button curved">200 comments</div>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+
+
+
+                    <div id="about" >
+                        Lives in <b>Mumbai, Maharashtra</b><br>
+                        From <b>Dahisar, India</b><br>
+                        Relationship Status <b>Single</b><br>
+                        Studied Computer Science and Engineering at KJ Somaiya College Of Engineering And Information Technology
+                    </div>
+
+                    <div id="friends">
+                        {{#each following}}
+                            <div class="friend">
+                                <div class="friendImage">
+                                    <img alt="pics" src="{{this.userdp}}">
+                                </div>
+                                <div class="friendName">
+                                    {{this.username}}
+                                    {{#if unfollow}}
+                                    <a class="button">Unfollow</a>  
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+            </div>
+        <script>
+            var suggestions = document.querySelectorAll('.friend');
+            console.log(suggestions[0]);
+            for(var i=0;i<suggestions.length;i++){
+                suggestions[i].children[1].children[0].addEventListener('click',(e)=>{
+                    var img = e.srcElement.parentElement.parentElement.children[0].children[0].getAttribute('src');
+                    fetch('/unfollow',{
+                        method:'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body : JSON.stringify({
+                            img,  
+                        }),
+                    });
+                    e.srcElement.parentElement.parentElement.style.display='none'
+                });
+            }
+        </script>    
+    </body>
+</html>
